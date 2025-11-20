@@ -74,7 +74,7 @@ uvicorn main:app --reload
 
 L'API sera accessible sur : `http://localhost:8000`
 
------
+
 
 ## 🐳 Démarrage avec Docker
 
@@ -88,7 +88,6 @@ docker build -t sentiment-backend .
 docker run -p 8000:8000 --env-file .env sentiment-backend
 ```
 
------
 
 ## 📖 Documentation de l'API (Endpoints)
 
@@ -102,7 +101,6 @@ Une fois le serveur lancé, accédez à la documentation interactive complète s
 | `POST` | `/predict` | **Privé** | Prend `{text}`. Nécessite un header `Authorization: Bearer <TOKEN>`. |
 | `GET` | `/` | Public | Health check (vérification que l'API tourne). |
 
------
 
 ## 🧪 Tests
 
@@ -115,10 +113,6 @@ pytest
 ## 🤝 Contribution
 
 Les contributions sont bienvenues. Merci d'ouvrir une issue pour discuter des changements majeurs.
-
-```
-
----
 
 ### 📝 Descriptions pour vos dépôts GitHub
 
