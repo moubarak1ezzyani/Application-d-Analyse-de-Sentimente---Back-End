@@ -1,149 +1,132 @@
-# 🤖 Application d'Analyse de Sentiment Client
+# 🧠 Sentiment Analysis API (Backend)
 
-## **Microservice FastAPI Sécurisé avec Next.js et Hugging Face**
+Microservice backend performant développé avec **FastAPI**. Ce service expose une API REST sécurisée permettant d'analyser le sentiment d'un texte en utilisant le modèle d'IA `nlptown/bert-base-multilingual-uncased-sentiment` via l'API d'inférence de Hugging Face.
 
-Ce projet est la réalisation du **Brief N°6** visant à créer un micro-service d'analyse de sentiment. Il permet de traiter automatiquement les avis clients (provenant de réseaux sociaux, formulaires ou plateformes e-commerce) en utilisant le modèle de pointe `nlptown/bert-base-multilingual-uncased-sentiment` hébergé sur l'API Inference de **Hugging Face**.
+Ce projet assure l'authentification, la gestion des erreurs et la transformation des scores de l'IA.
 
-L'application est entièrement conteneurisée avec **Docker** et propose une interface utilisateur front-end développée avec **Next.js** pour des tests rapides et une démonstration.
 
------
 
-## 🎯 Objectifs du Projet
+## ⚡ Fonctionnalités
 
-L'objectif principal est de construire une **API sécurisée, performante et facilement déployable** capable d'intégrer un service d'Intelligence Artificielle externe pour le marketing digital.
+* **API REST Rapide :** Basée sur FastAPI et Uvicorn.
+* **Sécurité JWT :** Système d'authentification complet (Login + Protection des routes).
+* **Intégration IA :** Connexion asynchrone à l'API Hugging Face.
+* **Documentation Interactive :** Swagger UI et Redoc intégrés automatiquement.
+* **Logique Métier :** Conversion des scores "étoiles" (1-5) en sentiments (Négatif/Neutre/Positif).
+* **Docker Ready :** Conteneurisation complète pour un déploiement facile.
 
-  * **Sécurité :** Mise en place d'un système d'authentification **JWT (JSON Web Token)**.
-  * **Fonctionnalité :** Appeler l'API Hugging Face et retourner un score de sentiment agrégé (Positif, Négatif, Neutre).
-  * **Conteneurisation :** Utilisation de **Docker** pour le déploiement du Backend (FastAPI) et du Frontend (Next.js).
-  * **Interface :** Création d'un Front-end **Next.js** pour tester l'authentification et la prédiction en temps réel.
-
------
+---
 
 ## 🛠️ Stack Technique
 
-| Composant | Technologie | Rôle |
-| :--- | :--- | :--- |
-| **Backend API** | **FastAPI (Python)** | Gestion des endpoints, Sécurité JWT, Appel à l'API HF. |
-| **IA Externe** | **Hugging Face Inference API** | Modèle `nlptown/bert-base-multilingual-uncased-sentiment`. |
-| **Authentification** | **PyJWT** | Création et vérification des Tokens d'accès. |
-| **Frontend** | **Next.js (React)** | Interface utilisateur (Login, Formulaire de prédiction, Affichage). |
-| **Conteneurisation** | **Docker** | Isolation et déploiement facile des deux services. |
-| **Tests** | **Pytest & Postman** | Tests unitaires pour le Backend et tests fonctionnels de l'API. |
+* **Langage :** Python 3.11+
+* **Framework :** FastAPI
+* **Sécurité :** PyJWT (JSON Web Tokens)
+* **Client HTTP :** Requests
+* **Serveur :** Uvicorn
+* **Gestion d'env :** Python-dotenv
 
------
+---
 
-## 🚀 Fonctionnalités Implémentées
+## ⚙️ Installation et Configuration
 
-### 1\. Backend (FastAPI)
+### 1. Cloner le projet
+```bash
+git clone [https://github.com/VOTRE-USERNAME/NOM-DU-REPO-BACKEND.git](https://github.com/VOTRE-USERNAME/NOM-DU-REPO-BACKEND.git)
+cd NOM-DU-REPO-BACKEND
+````
 
-L'API expose deux points d'accès majeurs :
+### 2\. Variables d'environnement (Critique)
 
-| Endpoint | Méthode | Description | Sécurité |
-| :--- | :--- | :--- | :--- |
-| **/login** | `POST` | Authentifie l'utilisateur (`username`/`password`) et retourne un **JWT** en cas de succès. | 🔓 Public |
-| **/predict** | `POST` | Reçoit un texte et l'envoie à l'API Hugging Face. | 🔒 Protégé par JWT |
+Créez un fichier `.env` à la racine du projet. **Ce fichier ne doit pas être commité.**
 
-#### Logique de Sentiment
+```ini
+# .env
+# Votre clé API Hugging Face ([https://huggingface.co/settings/tokens](https://huggingface.co/settings/tokens))
+HF_API_TOKEN="hf_xxxxxxxxxxxxxxxxxxxxxxxx"
 
-Le modèle Hugging Face retourne un score entre 1 et 5. Le backend FastAPI traduit ce score en catégories lisibles :
+# Clé secrète pour signer les tokens JWT (générez une chaîne aléatoire)
+JWT_SECRET="votre_super_secret_key_change_me"
 
-  * **Négatif :** Score de 1 ou 2.
-  * **Neutre :** Score de 3.
-  * **Positif :** Score de 4 ou 5.
-
-### 2\. Frontend (Next.js)
-
-L'interface est structurée en deux pages principales :
-
-  * **`/login` :** Contient un formulaire d'identification. Le JWT reçu est stocké dans le **`localStorage`** du navigateur pour les requêtes futures.
-  * **`/sentiment` :** Interface de test où l'utilisateur saisit un texte. La requête est envoyée à `/predict` en incluant le JWT dans l'en-tête `Authorization`. Affiche l'état (`loading`, `error`, `success`), le **sentiment (Positif/Négatif/Neutre)** et le **score (1 à 5)**.
-
------
-
-## 🔑 Installation et Démarrage avec Docker
-
-L'application est conçue pour être lancée via `docker-compose`.
-
-### Prérequis
-
-  * Docker et Docker Compose installés.
-  * Une clé **Hugging Face API Token** (`HF_API_KEY`).
-
-### Configuration
-
-Créez un fichier `.env` à la racine du dossier **backend** avec les variables suivantes :
-
-```env
-# Clé d'API Hugging Face
-HF_API_KEY="votre_clé_hugging_face_ici" 
-
-# Clé secrète pour l'encodage et le décodage des JWT (changer pour la production !)
-SECRET_KEY="votre_clé_secrète_JWT_ici"
-ALGORITHM="HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES=30
+# (Optionnel) URL du modèle si vous souhaitez le changer
+HF_API_URL="[https://api-inference.huggingface.co/models/nlptown/bert-base-multilingual-uncased-sentiment](https://api-inference.huggingface.co/models/nlptown/bert-base-multilingual-uncased-sentiment)"
 ```
 
-### Commandes de Démarrage
+### 3\. Installation locale (Sans Docker)
 
-1.  **Construire les images Docker :**
+Créez un environnement virtuel et installez les dépendances :
 
-    ```bash
-    docker-compose build
-    ```
+```bash
+python -m venv venv
+# Windows :
+.\venv\Scripts\activate
+# Mac/Linux :
+source venv/bin/activate
 
-2.  **Démarrer l'application (Backend + Frontend) :**
+pip install -r requirements.txt
+```
 
-    ```bash
-    docker-compose up
-    ```
+Lancez le serveur :
 
-### Accès aux services
+```bash
+uvicorn main:app --reload
+```
 
-Une fois démarré, les services sont accessibles aux adresses suivantes :
-
-  * **API Backend (FastAPI) :** `http://localhost:8000/docs` (Documentation interactive/Swagger UI)
-  * **Frontend (Next.js) :** `http://localhost:3000`
-
------
-
-## 🧪 Tests et Validation
-
-### 1\. Tests Fonctionnels avec Postman
-
-Les tests Postman sont essentiels pour valider le flux complet :
-
-1.  **Test /login :** Requête POST avec un `username` et `password` valide pour obtenir un JWT.
-2.  **Test /predict (Succès) :** Requête POST avec un texte et le JWT dans l'en-tête `Authorization: Bearer <token>`.
-3.  **Test /predict (JWT Manquant/Invalide) :** Requête POST sans JWT ou avec un token expiré pour vérifier le rejet d'accès (statut 401/403).
-4.  **Test des cas sentiments :** Envoyer des textes clairement Positifs, Négatifs et Neutres pour valider la logique de conversion 1-5 → Positif/Négatif/Neutre.
-5.  **Test d'erreurs HF :** Simuler ou gérer un cas où l'API Hugging Face renvoie une erreur (clé invalide, service indisponible, etc.).
-
-### 2\. Tests Unitaires avec Pytest
-
-Des tests unitaires sont inclus pour valider les fonctions critiques du Backend :
-
-  * Test de la fonction de **création/vérification du JWT**.
-  * Test de la **logique de conversion** du score (1-5 vers Positif/Négatif/Neutre).
-  * Test des **dépendances de sécurité** (`verify_token`).
+L'API sera accessible sur : `http://localhost:8000`
 
 -----
 
-## 📄 Documentation et Limites
+## 🐳 Démarrage avec Docker
 
-### Workflow Sécurité (Login → Prédiction Protégée)
+Pour lancer le backend dans un conteneur isolé :
 
-Le flux de sécurité garantit que seul le personnel autorisé peut utiliser le service de prédiction, réduisant ainsi le risque d'abus et de dépassement de quota sur l'API Hugging Face.
+```bash
+# 1. Construire l'image
+docker build -t sentiment-backend .
 
-1.  **Demande de Connexion :** L'utilisateur envoie ses identifiants à `/login`.
-2.  **Création du JWT :** Le serveur vérifie les identifiants et génère un JWT contenant l'identité de l'utilisateur et une date d'expiration.
-3.  **Stockage du Token :** Le Frontend stocke le JWT dans le `localStorage`.
-4.  **Accès Protégé :** Pour toute requête à `/predict`, le Frontend ajoute le JWT dans l'en-tête `Authorization` (format `Bearer Token`).
-5.  **Vérification :** L'endpoint `/predict` utilise une dépendance `Depends(verify_token)` qui décode et valide la signature et l'expiration du JWT. Si le token est valide, l'accès est accordé.
+# 2. Lancer le conteneur (en chargeant le fichier .env)
+docker run -p 8000:8000 --env-file .env sentiment-backend
+```
 
-### Limites du Service IA Externe
+-----
 
-L'utilisation d'un service IA externe introduit des dépendances à considérer :
+## 📖 Documentation de l'API (Endpoints)
 
-  * **Latence :** Le temps de réponse dépend de la performance et de la charge des serveurs Hugging Face.
-  * **Quota/Coût :** L'utilisation de l'API Inference a souvent des limites ou des coûts associés. La sécurité JWT est essentielle pour contrôler l'accès et gérer les dépenses.
-  * **Modèle fixe :** L'application est liée aux performances du modèle `nlptown/bert-base-multilingual-uncased-sentiment`. Toute mise à jour des performances ou bilinguisme est gérée par l'équipe Hugging Face et non par l'agence.
+Une fois le serveur lancé, accédez à la documentation interactive complète sur `http://localhost:8000/docs`.
+
+### Résumé des routes :
+
+| Méthode | Endpoint | Accès | Description |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/login` | Public | Prend `{username, password}` et retourne un `access_token`. |
+| `POST` | `/predict` | **Privé** | Prend `{text}`. Nécessite un header `Authorization: Bearer <TOKEN>`. |
+| `GET` | `/` | Public | Health check (vérification que l'API tourne). |
+
+-----
+
+## 🧪 Tests
+
+Des tests unitaires sont disponibles (si implémentés avec pytest) :
+
+```bash
+pytest
+```
+
+## 🤝 Contribution
+
+Les contributions sont bienvenues. Merci d'ouvrir une issue pour discuter des changements majeurs.
+
+```
+
+---
+
+### 📝 Descriptions pour vos dépôts GitHub
+
+Voici les textes courts à copier-coller dans la section **"About"** (la petite description à droite sur la page d'accueil de chaque dépôt GitHub).
+
+#### Pour le Repo **FRONTEND** :
+> Interface utilisateur réactive développée avec **Next.js** et **Tailwind CSS**. Elle permet l'authentification utilisateur et la visualisation en temps réel des analyses de sentiment via une consommation sécurisée de l'API Backend.
+
+#### Pour le Repo **BACKEND** :
+> Microservice API robuste construit avec **FastAPI** et **Docker**. Il gère l'authentification **JWT** et orchestre l'analyse de sentiment en connectant le modèle **Hugging Face BERT** au frontend.
+```
