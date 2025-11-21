@@ -15,7 +15,6 @@ Ce projet assure l'authentification, la gestion des erreurs et la transformation
 * **Logique Métier :** Conversion des scores "étoiles" (1-5) en sentiments (Négatif/Neutre/Positif).
 * **Docker Ready :** Conteneurisation complète pour un déploiement facile.
 
----
 
 ## 🛠️ Stack Technique
 
@@ -26,7 +25,6 @@ Ce projet assure l'authentification, la gestion des erreurs et la transformation
 * **Serveur :** Uvicorn
 * **Gestion d'env :** Python-dotenv
 
----
 
 ## ⚙️ Installation et Configuration
 
